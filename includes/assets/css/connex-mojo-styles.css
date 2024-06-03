@@ -1,0 +1,208 @@
+/* Style the button */
+.btn {
+    background-color: #0073e6;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #005bb5;
+}
+
+/* Style the members list container */
+.all-members,
+.committee-members,
+.events,
+.member-details-updated-since-list,
+.all-committee-members {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.committee-members {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four columns */
+    gap: 20px; /* Spacing between items */
+}
+
+@media (max-width: 1200px) {
+    .committee-members {
+        grid-template-columns: repeat(3, 1fr); /* Three columns for smaller screens */
+    }
+}
+
+@media (max-width: 900px) {
+    .committee-members {
+        grid-template-columns: repeat(2, 1fr); /* Two columns for smaller screens */
+    }
+}
+
+@media (max-width: 600px) {
+    .committee-members {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+
+/* Existing individual member items styles */
+.all-member-item,
+.committee-member-item,
+.event-item,
+.member-details-updated-since-item,
+.all-committee-member-item {
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.all-member-item:hover,
+.committee-member-item:hover,
+.event-item:hover,
+.member-details-updated-since-item:hover,
+.all-committee-member-item:hover {
+    background-color: #f1f1f1;
+}
+
+.all-member-item p,
+.committee-member-item p,
+.event-item p,
+.member-details-updated-since-item p,
+.all-committee-member-item p {
+    margin: 5px 0;
+}
+
+/* New styles for the member card */
+.committee-member-item {
+    margin-bottom: 0; /* Remove bottom margin to fit the grid */
+    padding: 0; /* Remove padding to fit the new design */
+    border: none; /* Remove border to fit the new design */
+}
+
+.member-card {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(90deg, #2e8555, #1e90ff);
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+}
+.member-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+	padding: 10px;
+}
+
+.member-icon img {
+    object-fit: contain;
+	
+}
+
+.member-details {
+    flex-grow: 1;
+}
+
+.member-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.member-position, .member-role {
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Ensure the grid container is displayed as a grid */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Style each event item */
+.event-item {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+/* Style the event date */
+.event-date {
+    background: #ffffff;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.event-month {
+    display: block;
+    font-size: 0.9em;
+    color: #82CDBF;
+	text-transform: uppercase;
+}
+
+.event-day {
+    display: block;
+    font-size: 1.5em;
+    color: #333;
+}
+
+/* Style the event details */
+.event-details {
+    flex-grow: 1;
+}
+
+.event-name {
+    font-size: 1.2em;
+    margin: 0 0 5px;
+	color: #068774;
+}
+
+.event-description {
+    margin: 0;
+    color: #666;
+}
+
+/* Hover effect for the event item */
+.event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .events-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .event-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .event-date {
+        margin: 0 auto 10px;
+    }
+
+    .event-details {
+        text-align: center;
+    }
+}
+
