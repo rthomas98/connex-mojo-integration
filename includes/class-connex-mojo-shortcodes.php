@@ -97,7 +97,13 @@ class Connex_Mojo_Shortcodes {
 public function display_all_events() {
     $response = $this->api->request('/ConnexFmEvent/AllEvent');
 
+    // Sort events by start date in descending order
+    usort($response, function($a, $b) {
+        return strtotime($b['startDate']) - strtotime($a['startDate']);
+    });
+
     ob_start();
+
 
     if ($response) {
         echo '<div class="events-grid">';
