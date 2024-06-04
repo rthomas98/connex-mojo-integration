@@ -51,9 +51,36 @@ class Connex_Mojo_Shortcodes {
         return ob_get_clean();
     }
 
-    function shouldHidePosition($position) {
-        $positionsToHideLowerCase = array("connex staff liaison");
+    function shouldHideCommitteeMemberPosition($position) {
+        $positionsToHideLowerCase = array("connex staff liaison"); # in case we need to hide others later
         return isset($position) && in_array(strtolower($position), $positionsToHideLowerCase);
+    }
+
+    function formatCommitteeMemberName($name) {
+        # change "LAST, FIRST" to "FIRST LAST"
+        $nameParts = explode(",", $name, 2);
+        if (count($nameParts) == 2) {
+            return trim($nameParts[1]) . " " . trim($nameParts[0]);
+        }
+        return $name;
+    }
+
+    const COMMITTEE_POSITION_CHAIR = "Chair";
+    function sortCommitteeMembers(array &$memberArray) {
+        # show members with position containing "Chair" first; otherwise, sort by name (assuming "LAST, FIRST" format)
+        usort($memberArray, function($a,$b) {
+            $positionA = $a['position'];
+            $positionB = $b['position'];
+            $memberIsChairA = stripos($positionA, self::COMMITTEE_POSITION_CHAIR) !== false;
+            $memberIsChairB = stripos($positionB, self::COMMITTEE_POSITION_CHAIR) !== false;
+            if ($memberIsChairA && !$memberIsChairB) {
+                return -1;
+            } else if (!$memberIsChairA && $memberIsChairB) {
+                return 1;
+            } else {
+                return strcasecmp($a['name'], $b['name']);
+            }
+        });
     }
 
     public function display_committee_members( $atts ) {
@@ -70,17 +97,25 @@ class Connex_Mojo_Shortcodes {
         ob_start();
 
         if ( $response ) {
+            $this->sortCommitteeMembers($response);
+
     echo '<ul class="committee-members">';
     foreach ( $response as $member ) {
+
+        $position = esc_html( $member['position'] );
+        if ($this->shouldHideCommitteeMemberPosition($position)) {
+            continue;
+        }
+
         echo '<li class="committee-member-item">';
         echo '<div class="member-card">';
         echo '<div class="member-icon">';
-        echo '<img src="' . esc_url( 'https://prod24.connexfm.com/wp-content/uploads/2024/05/user-duotone-w.svg' ) . '" alt="Member Icon">';
+        echo '<img src="' . esc_url( '/wp-content/uploads/2024/05/user-duotone-w.svg' ) . '" alt="Member Icon">';
         echo '</div>';
         echo '<div class="member-details">';
-        echo '<p class="member-name">' . esc_html( $member['name'] ) . '</p>';
+        echo '<p class="member-name">' . $this->formatCommitteeMemberName(esc_html( $member['name'] )) . '</p>';
         echo '<p class="member-position">' . esc_html( $member['orgname'] ) . '</p>';
-        echo '<p class="member-role">' . esc_html( $member['position'] ) . '</p>';
+        echo '<p class="member-role">' . mb_convert_case($position, MB_CASE_TITLE) . '</p>'; 
         echo '</div>';
         echo '</div>';
         echo '</li>';
