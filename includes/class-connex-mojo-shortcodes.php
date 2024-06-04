@@ -80,7 +80,7 @@ class Connex_Mojo_Shortcodes {
         echo '<div class="member-details">';
         echo '<p class="member-name">' . esc_html( $member['name'] ) . '</p>';
         echo '<p class="member-position">' . esc_html( $member['orgname'] ) . '</p>';
-        echo '<p class="member-role">' . esc_html( $member['position'] ) . '</p>'; 
+        echo '<p class="member-role">' . esc_html( $member['position'] ) . '</p>';
         echo '</div>';
         echo '</div>';
         echo '</li>';
@@ -122,9 +122,9 @@ public function display_all_events() {
 
     return ob_get_clean();
 }
-	
 
-   public function display_event_details() {
+
+    public function display_event_details() {
         if (!isset($_GET['event_id'])) {
             return 'Event ID is missing.';
         }
@@ -137,14 +137,41 @@ public function display_all_events() {
         }
 
         ob_start();
-        echo '<div class="event-detail">';
-        echo '<h1>' . esc_html($response['eventName']) . '</h1>';
-        echo '<p><strong>Date:</strong> ' . esc_html($response['startDate']) . ' - ' . esc_html($response['endDate']) . '</p>';
-        echo '<p><strong>Location:</strong> ' . esc_html($response['locationCity']) . ', ' . esc_html($response['locationStateId']) . '</p>';
-        echo '<p>' . $response['htmlDescription'] . '</p>';
-        echo '</div>';
+        ?>
+        <div class="">
+            <div class="event-header-wrapper">
+                <div class="event-header">
+                    <div class="event-title">
+                        <h1><?php echo esc_html($response['eventName']); ?></h1>
+                        <p class="event-date">
+                            <strong>Start Date - End Date:</strong><br>
+                            <?php echo esc_html($response['startDate']); ?> - <?php echo esc_html($response['endDate']); ?>
+                        </p>
+
+                        <p class="event-location">
+                            <strong>Location:</strong> <?php echo esc_html($response['locationCity']); ?>, <?php echo esc_html($response['locationStateId']); ?>
+                        </p>
+                    </div>
+                    <div class="event-registration">
+                        <h2><strong>Registration Deadline:</strong></h2>
+                        <button class="btn">Register</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="event-description">
+                <?php echo $response['htmlDescription']; ?>
+            </div>
+            <div class="event-agenda">
+                <h2>Agenda</h2>
+                <!-- Agenda details here -->
+            </div>
+        </div>
+        <?php
         return ob_get_clean();
     }
+
+
 
     public function display_member_details_updated_since( $atts ) {
         $atts = shortcode_atts( array(
@@ -231,7 +258,7 @@ public function display_all_events() {
         return ob_get_clean();
     }
 
-    
+
     public function display_all_committees() {
         $response = $this->api->request( '/ConnexFmCommittee/AllCommittee');
 
@@ -253,7 +280,7 @@ public function display_all_events() {
         return ob_get_clean();
     }
 
-    
+
 
 
 }
