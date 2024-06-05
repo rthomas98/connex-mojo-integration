@@ -227,7 +227,9 @@ class Connex_Mojo_Shortcodes {
                         </p>
                     </div>
                     <div class="event-registration-detail">
-                        <h2><strong>Registration Deadline:</strong></h2>
+                        <p>Registration Deadline:</p>
+                        <h2><strong><?php echo esc_html($response['lastRegisterDate']); ?></strong></h2>
+
                         <button class="btn-detail">Register</button>
 
                     </div>
@@ -350,8 +352,5 @@ class Connex_Mojo_Shortcodes {
 
         return ob_get_clean();
     }
-
-
-
 
 }
