@@ -144,8 +144,12 @@
 
 /* Style the event date */
 .event-date {
+    background: #ffffff;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    margin-right: 10px;
 }
-
 .event-month {
     display: block;
     font-size: 0.9em;
@@ -219,11 +223,11 @@
     min-width: 1440px;
 }
 
-.event-title {
+.event-detail-title {
     max-width: 60%;
 }
 
-.event-title h1 {
+.event-detail-title h1 {
     color: #FFF;
     font-family: Raleway;
     font-size: 58px;
@@ -232,7 +236,7 @@
     line-height: normal;
 }
 
-.event-date, .event-location {
+.event-date-detail, .event-location-detail {
     color: #FFF;
     font-family: Poppins;
     font-size: 16px;
@@ -241,7 +245,7 @@
     line-height: normal;
 }
 
-.event-registration {
+.event-registration-detail {
     background: #000;
     padding: 66px 29px;
     border-radius: 20px;
@@ -249,13 +253,13 @@
     height: auto;
 }
 
-.event-registration p {
+.event-registration-detail p {
     font-size: 1em;
     color: #666;
     margin-bottom: 10px;
 }
 
-.event-registration h2 {
+.event-registration-detail h2 {
     color: #FFF;
     font-family: Poppins;
     font-size: 16px;
@@ -264,7 +268,7 @@
     line-height: normal;
 }
 
-.btn {
+.btn-detail {
     display: block;
     margin: 5px 0;
     padding: 20px 20px;
@@ -278,26 +282,26 @@
     width: 100%;
 }
 
-.btn:hover {
+.btn-detail:hover {
     background: #005bb5;
 }
 
-.event-description {
+.event-description-detail {
     margin-bottom: 20px;
 }
 
-.event-agenda {
+.event-agenda-detail {
     background: #2387C8;
     padding: 20px;
 }
 
-.event-agenda h2 {
+.event-agenda-detail h2 {
     font-size: 1.5em;
     margin-bottom: 10px;
     color: white;
 }
 
-.event-agenda p {
+.event-agenda-detail p {
     color: #FFF;
     font-family: Poppins;
     font-size: 18px;

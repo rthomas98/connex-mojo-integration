@@ -180,33 +180,30 @@ public function display_all_events() {
         ob_start();
         ?>
         <div class="">
-            <div class="event-header-wrapper">
-                <div class="event-header">
+            <div class="event-header-wrapper-detail">
+                <div class="event-header-detail">
                     <div class="event-title">
                         <h1><?php echo esc_html($response['eventName']); ?></h1>
-                        <p class="event-date">
+                        <p class="event-date-detail">
                             <strong>Start Date - End Date:</strong><br>
                             <?php echo esc_html($response['startDate']); ?> - <?php echo esc_html($response['endDate']); ?>
                         </p>
 
-                        <p class="event-location">
+                        <p class="event-location-detail">
                             <strong>Location:</strong> <?php echo esc_html($response['locationCity']); ?>, <?php echo esc_html($response['locationStateId']); ?>
                         </p>
                     </div>
-                    <div class="event-registration">
+                    <div class="event-registration-detail">
                         <h2><strong>Registration Deadline:</strong></h2>
-                        <button class="btn">Register</button>
+                        <button class="btn-detail">Register</button>
 
                     </div>
                 </div>
             </div>
-            <div class="event-description">
+            <div class="event-description-detail">
                 <?php echo $response['htmlDescription']; ?>
             </div>
-            <div class="event-agenda">
-                <h2>Agenda</h2>
-                <!-- Agenda details here -->
-            </div>
+            
         </div>
         <?php
         return ob_get_clean();
