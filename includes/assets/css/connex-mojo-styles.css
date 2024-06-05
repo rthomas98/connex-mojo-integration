@@ -127,7 +127,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 /* Style each event item */
@@ -308,4 +308,34 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+}
+
+
+/* Styles for the search form */
+#connex-mojo-search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Styles for the search form */
+
+#connex-mojo-search-form input,
+#connex-mojo-search-form select,
+#connex-mojo-search-form button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#connex-mojo-search-form button {
+    background: #0073e6;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#connex-mojo-search-form button:hover {
+    background: #005bb5;
 }

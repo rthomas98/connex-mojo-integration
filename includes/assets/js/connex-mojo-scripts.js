@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+    // Existing button click handlers
     $('.btn').on('click', function(e) {
         e.preventDefault();
         var action = $(this).data('action');
@@ -35,6 +36,57 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 $('#all-committee-members-result').html(response);
             }
+        });
+    });
+
+    // Function to fetch events
+    function fetchEvents(data) {
+        $.post(connexMojo.ajax_url, data, function(response) {
+            if (response.success) {
+                $('#connex-mojo-events-results').html(response.data);
+            } else {
+                $('#connex-mojo-events-results').html('<p>No events found.</p>');
+            }
+        });
+    }
+
+    // Fetch active events on page load
+    fetchEvents({
+        action: 'connex_mojo_search_events',
+        nonce: connexMojo.nonce,
+        search: '',
+        start_date: '',
+        end_date: '',
+        status: 'active'
+    });
+
+    // Handle form submission
+    $('#connex-mojo-search-form').on('submit', function(e) {
+        e.preventDefault();
+
+        var data = {
+            action: 'connex_mojo_search_events',
+            nonce: connexMojo.nonce,
+            search: $('#search').val(),
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val(),
+            status: $('#status').val()
+        };
+
+        fetchEvents(data);
+    });
+
+    // Handle form reset
+    $('#reset').on('click', function() {
+        $('#connex-mojo-search-form').trigger('reset');
+        $('#connex-mojo-events-results').html('');
+        fetchEvents({
+            action: 'connex_mojo_search_events',
+            nonce: connexMojo.nonce,
+            search: '',
+            start_date: '',
+            end_date: '',
+            status: 'active'
         });
     });
 });

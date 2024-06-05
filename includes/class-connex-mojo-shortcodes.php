@@ -4,15 +4,16 @@ class Connex_Mojo_Shortcodes {
 
     public function __construct( $api ) {
         $this->api = $api;
-        add_shortcode( 'connex_mojo_login', array( $this, 'display_login_form' ) );
-        add_shortcode( 'connex_mojo_committee_members', array( $this, 'display_committee_members' ) );
-        add_shortcode( 'connex_mojo_all_events', array( $this, 'display_all_events' ) );
-        add_shortcode( 'connex_mojo_member_details', array( $this, 'display_member_details' ) );
-        add_shortcode( 'connex_mojo_member_details_updated_since', array( $this, 'display_member_details_updated_since' ) );
-        add_shortcode( 'connex_mojo_all_members', array( $this, 'display_all_members' ) );
-        add_shortcode( 'connex_mojo_all_committee_members', array( $this, 'display_all_committee_members' ) );
-        add_shortcode( 'connex_mojo_all_committees', array( $this, 'display_all_committees' ) );
-        add_shortcode( 'connex_mojo_event_details', array( $this, 'display_event_details' ) );
+        add_shortcode('connex_mojo_login', array($this, 'display_login_form'));
+        add_shortcode('connex_mojo_committee_members', array($this, 'display_committee_members'));
+        add_shortcode('connex_mojo_all_events', array($this, 'display_all_events'));
+        add_shortcode('connex_mojo_member_details', array($this, 'display_member_details'));
+        add_shortcode('connex_mojo_member_details_updated_since', array($this, 'display_member_details_updated_since'));
+        add_shortcode('connex_mojo_all_members', array($this, 'display_all_members'));
+        add_shortcode('connex_mojo_all_committee_members', array($this, 'display_all_committee_members'));
+        add_shortcode('connex_mojo_all_committees', array($this, 'display_all_committees'));
+        add_shortcode('connex_mojo_event_details', array($this, 'display_event_details'));
+        add_shortcode('connex_mojo_search_form', array($this, 'display_search_form'));
     }
 
     public function display_login_form() {
@@ -115,7 +116,7 @@ class Connex_Mojo_Shortcodes {
         echo '<div class="member-details">';
         echo '<p class="member-name">' . $this->formatCommitteeMemberName(esc_html( $member['name'] )) . '</p>';
         echo '<p class="member-position">' . esc_html( $member['orgname'] ) . '</p>';
-        echo '<p class="member-role">' . mb_convert_case($position, MB_CASE_TITLE) . '</p>'; 
+        echo '<p class="member-role">' . mb_convert_case($position, MB_CASE_TITLE) . '</p>';
         echo '</div>';
         echo '</div>';
         echo '</li>';
@@ -129,20 +130,54 @@ class Connex_Mojo_Shortcodes {
         return ob_get_clean();
     }
 
-public function display_all_events() {
-    $response = $this->api->request('/ConnexFmEvent/AllEvent');
+    // Events search form
+    public function display_search_form() {
+        ob_start();
+        ?>
+        <form id="connex-mojo-search-form">
+            <input type="text" id="search" name="search" placeholder="Search events">
+            <input type="date" id="start_date" name="start_date">
+            <input type="date" id="end_date" name="end_date">
+            <select id="status" name="status">
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            <button type="submit">Search</button>
+            <button type="button" id="reset">Reset</button>
+        </form>
+        <div id="connex-mojo-events-results"></div>
+        <?php
+        return ob_get_clean();
+    }
 
-    // Sort events by start date in descending order
-    usort($response, function($a, $b) {
-        return strtotime($b['startDate']) - strtotime($a['startDate']);
-    });
-
-    ob_start();
 
 
-    if ($response) {
+    // Display all events
+    public function display_all_events() {
+        $response = $this->api->request('/ConnexFmEvent/AllEvent');
+
+        if (!$response) {
+            return 'No events found.';
+        }
+
+        // Get today's date
+        $today = strtotime(date('Y-m-d'));
+
+        // Filter only active events
+        $active_events = array_filter($response, function($event) use ($today) {
+            return strtotime($event['startDate']) >= $today;
+        });
+
+        // Sort events by start date in descending order
+        usort($active_events, function($a, $b) {
+            return strtotime($b['startDate']) - strtotime($a['startDate']);
+        });
+
+        ob_start();
+
         echo '<div class="events-grid">';
-        foreach ($response as $event) {
+        foreach ($active_events as $event) {
             $event_id = esc_attr($event['eventId']);
             $event_url = add_query_arg('event_id', $event_id, get_permalink(get_page_by_path('event-details'))); // Assumes 'event-details' is the slug of your event details page
 
@@ -157,12 +192,10 @@ public function display_all_events() {
             echo '</a>';
         }
         echo '</div>';
-    } else {
-        echo 'No events found.';
+
+        return ob_get_clean();
     }
 
-    return ob_get_clean();
-}
 
 
     public function display_event_details() {
@@ -203,7 +236,7 @@ public function display_all_events() {
             <div class="event-description-detail">
                 <?php echo $response['htmlDescription']; ?>
             </div>
-            
+
         </div>
         <?php
         return ob_get_clean();
