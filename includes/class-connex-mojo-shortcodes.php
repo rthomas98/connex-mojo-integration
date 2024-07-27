@@ -13,6 +13,7 @@ class Connex_Mojo_Shortcodes {
         add_shortcode('connex_mojo_all_committee_members', array($this, 'display_all_committee_members'));
         add_shortcode('connex_mojo_all_committees', array($this, 'display_all_committees'));
         add_shortcode('connex_mojo_event_details', array($this, 'display_event_details'));
+        add_shortcode('connex_mojo_event_reg', array($this, 'display_event_reg'));
         add_shortcode('connex_mojo_search_form', array($this, 'display_search_form'));
     }
 
@@ -210,6 +211,8 @@ class Connex_Mojo_Shortcodes {
             return 'Event details not found.';
         }
 
+        $event_reg_url = add_query_arg('event_id', $event_id, get_permalink(get_page_by_path('event-reg')));
+
         ob_start();
         ?>
         <div class="">
@@ -230,7 +233,7 @@ class Connex_Mojo_Shortcodes {
                         <p>Registration Deadline:</p>
                         <h2><strong><?php echo esc_html($response['lastRegisterDate']); ?></strong></h2>
 
-                        <button class="btn-detail">Register</button>
+                        <a href="<?php echo $event_reg_url ?>" class="btn-detail">Register</a>
 
                     </div>
                 </div>
@@ -244,7 +247,16 @@ class Connex_Mojo_Shortcodes {
         return ob_get_clean();
     }
 
-
+    public function display_event_reg() {
+        if (!isset($_GET['event_id'])) {
+            return 'Event ID is missing.';
+        }
+        ob_start();
+        ?>        
+        <iframe src="https://member.connexfm.com/cvweb/cgi-bin/Registerdll.dll/RegistrationForm?sessionaltcd=<?= $_GET['event_id'] ?>" hideadminborder="False" frameborder="0" width="100%" scrolling="no" height="1000" AllowIndex="True">Your browser does not support inline frames</iframe>
+        <?php
+        return ob_get_clean();
+    }
 
     public function display_member_details_updated_since( $atts ) {
         $atts = shortcode_atts( array(
