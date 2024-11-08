@@ -53,9 +53,14 @@ class Connex_Mojo_Shortcodes {
         return ob_get_clean();
     }
 
-    function shouldHideCommitteeMemberPosition($position) {
-        $positionsToHideLowerCase = array("connex staff liaison"); # in case we need to hide others later
-        return isset($position) && in_array(strtolower($position), $positionsToHideLowerCase);
+    // function shouldHideCommitteeMemberPosition($position) {
+    //     $positionsToHideLowerCase = array("connex staff liaison"); # in case we need to hide others later
+    //     return isset($position) && in_array(strtolower($position), $positionsToHideLowerCase);
+    // }
+    // 20240925
+    function shouldShowCommitteeMemberPosition($position) {
+        $positionsToShowLowerCase = array("council member","council chair/co-chair","committee member","committee chair/co-chair");
+        return isset($position) && in_array(strtolower($position), $positionsToShowLowerCase);
     }
 
     function formatCommitteeMemberName($name) {
@@ -105,7 +110,8 @@ class Connex_Mojo_Shortcodes {
     foreach ( $response as $member ) {
 
         $position = esc_html( $member['position'] );
-        if ($this->shouldHideCommitteeMemberPosition($position)) {
+        #if ($this->shouldHideCommitteeMemberPosition($position)) {
+        if (!$this->shouldShowCommitteeMemberPosition($position)) { # 20240925
             continue;
         }
 
@@ -139,11 +145,12 @@ class Connex_Mojo_Shortcodes {
             <input type="text" id="search" name="search" placeholder="Search events">
             <input type="date" id="start_date" name="start_date">
             <input type="date" id="end_date" name="end_date">
-            <select id="status" name="status">
+            <!-- option disabled 20240925 -->
+            <!--<select id="status" name="status">
                 <option value="all">All</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
-            </select>
+            </select>-->
             <button type="submit">Search</button>
             <button type="button" id="reset">Reset</button>
         </form>
@@ -165,12 +172,12 @@ class Connex_Mojo_Shortcodes {
         // Get today's date
         $today = strtotime(date('Y-m-d'));
 
-        // Filter only active events
+        // Filter only future events
         $active_events = array_filter($response, function($event) use ($today) {
-            return strtotime($event['startDate']) >= $today;
+            return strtotime($event['startDate']) > $today;
         });
 
-        // Sort events by start date in descending order
+        // Sort events by start date in ascending order
         usort($active_events, function($a, $b) {
             return strtotime($b['startDate']) - strtotime($a['startDate']);
         });
@@ -212,6 +219,43 @@ class Connex_Mojo_Shortcodes {
         }
 
         $event_reg_url = add_query_arg('event_id', $event_id, get_permalink(get_page_by_path('event-reg')));
+
+        #20241029: temporary workarounds pending API fix
+        if ($event_id == 'CONNEX2025') {
+            $event_reg_url = 'https://www.national.connexfm.com/register';
+        } else if ($event_id == 'CCCNOV2024') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-be-great-sing-your-praises';
+        } else if ($event_id == 'LVLE_1124_PICP') {
+            $event_reg_url = 'https://educate.connexfm.com/products/vle-picking-partners';
+        } else if ($event_id == 'VLEGENERATIVEAI') {
+            $event_reg_url = 'https://educate.connexfm.com/products/vle-practical-applications-of-genai';
+        } else if ($event_id == 'CCCNOV222024') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-be-great-importance-of-recognition';
+        } else if ($event_id == 'CCCDEC2024') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-be-great-never-stop-learning';
+        } else if ($event_id == 'LVLE_1224_TIME') {
+            $event_reg_url = 'https://educate.connexfm.com/products/vle-time-management-for-the-traveling-professional';
+        } else if ($event_id == 'CCC_1224_ENER') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-what-the-tech-energy-management';
+        } else if ($event_id == 'CCCJAN2025') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-be-great-self-awareness';
+        } else if ($event_id == 'CCC_0125_UTIL') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-what-the-tech-utilities-management';
+        } else if ($event_id == 'CCCFEB2025') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-be-great-building-your-personal-brand';
+        } else if ($event_id == 'CCC_0225_OCUS') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-what-the-tech-occupancy-usage';
+        } else if ($event_id == 'CCCMAR2025') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-be-great-what-is-your-legacy';
+        } else if ($event_id == 'CCC_0325_MOBI') {
+            $event_reg_url = 'https://educate.connexfm.com/products/coffee-connexion-circle-what-the-tech-mobile';
+        }
+        
+        $customRegUrl = $response['registrationUrl'];
+        echo '<!-- customRegUrl: ' . $customRegUrl . ' -->';
+        if (isset($customRegUrl) && $customRegUrl !== '') {
+            $event_reg_url = $customRegUrl;
+		}
 
         ob_start();
         ?>

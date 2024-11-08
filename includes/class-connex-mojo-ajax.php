@@ -28,9 +28,13 @@ function connex_mojo_search_events() {
         $search_match = empty($search) || stripos($event['eventName'], $search) !== false;
         $start_date_match = empty($start_date) || $event_start_date >= strtotime($start_date);
         $end_date_match = empty($end_date) || $event_end_date <= strtotime($end_date);
-        $status_match = $status === 'all' || ($status === 'active' && $event_start_date >= $today) || ($status === 'inactive' && $event_start_date < $today);
+        
+        #$status_match = $status === 'all' || ($status === 'active' && $event_start_date >= $today) || ($status === 'inactive' && $event_start_date < $today);
+        $status_match = $event_start_date > $today; // 20240925
 
-        return $search_match && $start_date_match && $end_date_match && $status_match;
+        $viewOnline = $event['viewOnline'] == 'Y'; // 20241105
+
+        return $search_match && $start_date_match && $end_date_match && $status_match && $viewOnline;
     });
 
     // Sort events by start date in ascending order
@@ -45,6 +49,12 @@ function connex_mojo_search_events() {
             $event_id = esc_attr($event['eventId']);
             $event_url = add_query_arg('event_id', $event_id, get_permalink(get_page_by_path('event-details')));
 
+            # 20241023
+            if ($event_id == 'CCCNOV292024') {
+                continue;
+            }
+
+            
             echo '<a href="' . $event_url . '" class="event-item">';
             echo '<div class="event-date">';
             echo '<span class="event-month">' . esc_html(date('M', strtotime($event['startDate']))) . '</span>';
